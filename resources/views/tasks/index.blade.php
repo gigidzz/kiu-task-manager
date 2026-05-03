@@ -28,17 +28,17 @@
         <select name="status" class="form-select form-select-sm auto-filter"
                 style="width: auto; border-radius: 8px; border-color: #e8eaed; font-size: .85rem;">
             <option value="">All statuses</option>
-            <option value="pending" @selected(request('status') === 'pending')>Pending</option>
-            <option value="done"    @selected(request('status') === 'done')>Done</option>
+            <option value="0" @selected(request('status') === '0')>Pending</option>
+            <option value="1" @selected(request('status') === '1')>Done</option>
         </select>
 
         {{-- Priority --}}
         <select name="priority" class="form-select form-select-sm auto-filter"
                 style="width: auto; border-radius: 8px; border-color: #e8eaed; font-size: .85rem;">
             <option value="">All priorities</option>
-            <option value="high"   @selected(request('priority') === 'high')>High priority</option>
-            <option value="medium" @selected(request('priority') === 'medium')>Medium priority</option>
-            <option value="low"    @selected(request('priority') === 'low')>Low priority</option>
+            <option value="2" @selected(request('priority') === '2')>High priority</option>
+            <option value="1" @selected(request('priority') === '1')>Medium priority</option>
+            <option value="0" @selected(request('priority') === '0')>Low priority</option>
         </select>
 
         {{-- Deadline --}}
@@ -85,7 +85,7 @@
                 </thead>
                 <tbody>
                     @foreach($tasks as $task)
-                    @php $isOverdue = $task->status === 'pending' && $task->deadline && $task->deadline->isPast(); @endphp
+                    @php $isOverdue = $task->isPending() && $task->deadline && $task->deadline->isPast(); @endphp
                     <tr class="{{ $isOverdue ? 'row-overdue' : '' }}">
                         <td class="ps-4" style="color: #c0c8d4; font-size: .8rem;">{{ $task->id }}</td>
                         <td>
@@ -100,10 +100,10 @@
                             </span>
                         </td>
                         <td>
-                            <button class="btn btn-sm toggle-btn {{ $task->status === 'done' ? 'btn-success' : 'btn-outline-secondary' }}"
+                            <button class="btn btn-sm toggle-btn {{ $task->isDone() ? 'btn-success' : 'btn-outline-secondary' }}"
                                     data-url="{{ route('tasks.toggle', $task) }}"
                                     title="Click to toggle">
-                                @if($task->status === 'done')
+                                @if($task->isDone())
                                     <i class="bi bi-check-circle-fill me-1"></i>Done
                                 @else
                                     <i class="bi bi-circle me-1"></i>Pending
@@ -111,8 +111,8 @@
                             </button>
                         </td>
                         <td>
-                            <span class="priority-{{ $task->priority }}" style="font-size: .85rem;">
-                                {{ ucfirst($task->priority) }}
+                            <span class="{{ $task->priorityClass() }}" style="font-size: .85rem;">
+                                {{ $task->priorityLabel() }}
                             </span>
                         </td>
                         <td style="font-size: .85rem;">
@@ -195,7 +195,7 @@ document.querySelectorAll('.toggle-btn').forEach(btn => {
         const { status } = await res.json();
         const row = btn.closest('tr');
 
-        if (status === 'done') {
+        if (status === 1) {
             btn.className = 'btn btn-sm toggle-btn btn-success';
             btn.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i>Done';
             row.classList.remove('row-overdue');

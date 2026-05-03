@@ -13,7 +13,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center py-3">
                 <h5 class="mb-0">{{ $task->title }}</h5>
-                @if($task->status === 'done')
+                @if($task->isDone())
                     <span class="badge bg-success fs-6">Done</span>
                 @else
                     <span class="badge bg-secondary fs-6">Pending</span>
@@ -29,18 +29,17 @@
 
                     <dt class="col-sm-3 text-muted">Priority</dt>
                     <dd class="col-sm-9">
-                        <span class="priority-{{ $task->priority }}">
-                            <i class="bi bi-{{ $task->priority === 'high' ? 'exclamation-triangle-fill' : ($task->priority === 'medium' ? 'dash-circle-fill' : 'arrow-down-circle-fill') }} me-1"></i>
-                            {{ ucfirst($task->priority) }}
+                        <span class="{{ $task->priorityClass() }}">
+                            {{ $task->priorityLabel() }}
                         </span>
                     </dd>
 
                     <dt class="col-sm-3 text-muted">Deadline</dt>
                     <dd class="col-sm-9">
                         @if($task->deadline)
-                            <span class="{{ $task->status === 'pending' && $task->deadline->isPast() ? 'deadline-overdue' : '' }}">
+                            <span class="{{ $task->isPending() && $task->deadline->isPast() ? 'deadline-overdue' : '' }}">
                                 {{ $task->deadline->format('d M Y') }}
-                                @if($task->status === 'pending' && $task->deadline->isPast())
+                                @if($task->isPending() && $task->deadline->isPast())
                                     <span class="badge bg-danger ms-1">Overdue</span>
                                 @endif
                             </span>

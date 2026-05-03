@@ -34,8 +34,8 @@
     <div class="col-md-4 mb-3">
         <label for="status" class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
         <select id="status" name="status" class="form-select @error('status') is-invalid @enderror">
-            <option value="pending" @selected(old('status', $task->status ?? 'pending') === 'pending')>Pending</option>
-            <option value="done"    @selected(old('status', $task->status ?? '') === 'done')>Done</option>
+            <option value="0" @selected((int) old('status', $task->status ?? 0) === 0)>Pending</option>
+            <option value="1" @selected((int) old('status', $task->status ?? 0) === 1)>Done</option>
         </select>
         @error('status')
             <div class="invalid-feedback">{{ $message }}</div>
@@ -46,9 +46,9 @@
     <div class="col-md-4 mb-3">
         <label for="priority" class="form-label fw-semibold">Priority <span class="text-danger">*</span></label>
         <select id="priority" name="priority" class="form-select @error('priority') is-invalid @enderror">
-            <option value="low"    @selected(old('priority', $task->priority ?? '') === 'low')>Low</option>
-            <option value="medium" @selected(old('priority', $task->priority ?? 'medium') === 'medium')>Medium</option>
-            <option value="high"   @selected(old('priority', $task->priority ?? '') === 'high')>High</option>
+            <option value="0" @selected((int) old('priority', $task->priority ?? 1) === 0)>Low</option>
+            <option value="1" @selected((int) old('priority', $task->priority ?? 1) === 1)>Medium</option>
+            <option value="2" @selected((int) old('priority', $task->priority ?? 1) === 2)>High</option>
         </select>
         @error('priority')
             <div class="invalid-feedback">{{ $message }}</div>

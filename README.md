@@ -105,8 +105,8 @@ Visit [http://127.0.0.1:8000](http://127.0.0.1:8000)
 | `title`       | varchar(255)                  | Required                 |
 | `description` | text                          | Optional                 |
 | `subject`     | varchar(255)                  | e.g. Web Programming     |
-| `status`      | enum: `pending`, `done`       | Default: `pending`       |
-| `priority`    | enum: `low`, `medium`, `high` | Default: `medium`        |
+| `status`      | tinyint — `0` pending, `1` done            | Default: `0`  |
+| `priority`    | tinyint — `0` low, `1` medium, `2` high    | Default: `1`  |
 | `deadline`    | date                          | Optional                 |
 | `created_at`  | timestamp                     |                          |
 | `updated_at`  | timestamp                     |                          |

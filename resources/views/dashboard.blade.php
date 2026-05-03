@@ -88,7 +88,7 @@
                 <div style="font-size: .78rem; margin-top: 2px; color: #8693a4;">
                     {{ $task->subject }}
                     &nbsp;·&nbsp;
-                    <span class="priority-{{ $task->priority }}">{{ ucfirst($task->priority) }}</span>
+                    <span class="{{ $task->priorityClass() }}">{{ $task->priorityLabel() }}</span>
                 </div>
             </div>
             <div class="text-end ms-3" style="white-space: nowrap;">
