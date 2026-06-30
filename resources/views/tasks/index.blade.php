@@ -93,6 +93,16 @@
                                style="font-weight: 600; font-size: .9rem; text-decoration: none; color: {{ $isOverdue ? '#e53e3e' : '#1e2a3a' }};">
                                 {{ $task->title }}
                             </a>
+                            @if($task->tags->isNotEmpty())
+                                <div class="mt-1 d-flex flex-wrap gap-1">
+                                    @foreach($task->tags as $tag)
+                                        <span class="badge" style="background: {{ $tag->color }}; font-size: .65rem; font-weight: 500;">{{ $tag->name }}</span>
+                                    @endforeach
+                                </div>
+                            @endif
+                            @if($task->attachment)
+                                <i class="bi bi-paperclip text-muted ms-1" style="font-size: .75rem;" title="Has attachment"></i>
+                            @endif
                         </td>
                         <td>
                             <span style="font-size: .75rem; background: #f3f4f6; color: #6b7280; padding: 3px 9px; border-radius: 20px; font-weight: 500;">
@@ -158,10 +168,36 @@
         </div>
     </div>
 
-    <div class="mt-3 d-flex justify-content-center">
-        {{ $tasks->links() }}
+    @if($tasks->hasPages())
+    <div class="mt-4 d-flex flex-column flex-sm-row align-items-center justify-content-between gap-2">
+        <div style="font-size: .82rem; color: #8693a4;">
+            Showing <strong>{{ $tasks->firstItem() }}</strong>–<strong>{{ $tasks->lastItem() }}</strong>
+            of <strong>{{ $tasks->total() }}</strong> tasks
+        </div>
+        <div class="task-pagination">
+            {{ $tasks->onEachSide(1)->links() }}
+        </div>
     </div>
+    @endif
 @endif
+
+<style>
+    .task-pagination .pagination { margin-bottom: 0; gap: 4px; }
+    .task-pagination .page-link {
+        border: 1px solid #e8eaed;
+        border-radius: 8px;
+        color: #4a5568;
+        font-size: .85rem;
+        padding: .4rem .7rem;
+    }
+    .task-pagination .page-link:hover { background: #f0f4fb; color: #1e2a3a; }
+    .task-pagination .page-item.active .page-link {
+        background: #4f8ef7;
+        border-color: #4f8ef7;
+        color: #fff;
+    }
+    .task-pagination .page-item.disabled .page-link { color: #c2c9d2; background: #fff; }
+</style>
 
 <script>
 // Auto-submit when any dropdown filter changes

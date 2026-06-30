@@ -48,6 +48,34 @@
                         @endif
                     </dd>
 
+                    <dt class="col-sm-3 text-muted">Tags</dt>
+                    <dd class="col-sm-9">
+                        @forelse($task->tags as $tag)
+                            <span class="badge" style="background: {{ $tag->color }};">{{ $tag->name }}</span>
+                        @empty
+                            <span class="text-muted">—</span>
+                        @endforelse
+                    </dd>
+
+                    <dt class="col-sm-3 text-muted">Attachment</dt>
+                    <dd class="col-sm-9">
+                        @if($task->attachment)
+                            @php $ext = strtolower(pathinfo($task->attachment, PATHINFO_EXTENSION)); @endphp
+                            @if(in_array($ext, ['jpg', 'jpeg', 'png']))
+                                <a href="{{ asset('storage/' . $task->attachment) }}" target="_blank">
+                                    <img src="{{ asset('storage/' . $task->attachment) }}" alt="Attachment"
+                                         class="img-thumbnail" style="max-height: 160px;">
+                                </a>
+                            @else
+                                <a href="{{ asset('storage/' . $task->attachment) }}" target="_blank">
+                                    <i class="bi bi-file-earmark-pdf me-1"></i>View attached file
+                                </a>
+                            @endif
+                        @else
+                            <span class="text-muted">—</span>
+                        @endif
+                    </dd>
+
                     <dt class="col-sm-3 text-muted">Created</dt>
                     <dd class="col-sm-9">{{ $task->created_at->format('d M Y, H:i') }}</dd>
 

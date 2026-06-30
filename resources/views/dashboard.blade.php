@@ -8,47 +8,52 @@
     <div class="page-subtitle">Here's where your tasks stand today, {{ now()->format('l, d F') }}.</div>
 </div>
 
-{{-- Stat Strip --}}
-<div class="row g-3 mb-4">
-    <div class="col-6 col-lg-3">
-        <div class="card px-4 py-3">
-            <div style="font-size: 2.4rem; font-weight: 800; line-height: 1; color: #1e2a3a;">{{ $total }}</div>
-            <div class="mt-1" style="font-size: .8rem; color: #8693a4; font-weight: 500; text-transform: uppercase; letter-spacing: .6px;">Total</div>
-        </div>
-    </div>
-    <div class="col-6 col-lg-3">
-        <div class="card px-4 py-3">
-            <div style="font-size: 2.4rem; font-weight: 800; line-height: 1; color: #065f46;">{{ $done }}</div>
-            <div class="mt-1" style="font-size: .8rem; color: #8693a4; font-weight: 500; text-transform: uppercase; letter-spacing: .6px;">Done</div>
-        </div>
-    </div>
-    <div class="col-6 col-lg-3">
-        <div class="card px-4 py-3">
-            <div style="font-size: 2.4rem; font-weight: 800; line-height: 1; color: #4f8ef7;">{{ $pending }}</div>
-            <div class="mt-1" style="font-size: .8rem; color: #8693a4; font-weight: 500; text-transform: uppercase; letter-spacing: .6px;">Pending</div>
-        </div>
-    </div>
-    <div class="col-6 col-lg-3">
-        <div class="card px-4 py-3" style="{{ $overdue > 0 ? 'border-color: #fca5a5;' : '' }}">
-            <div style="font-size: 2.4rem; font-weight: 800; line-height: 1; color: {{ $overdue > 0 ? '#e53e3e' : '#1e2a3a' }};">{{ $overdue }}</div>
-            <div class="mt-1" style="font-size: .8rem; color: #8693a4; font-weight: 500; text-transform: uppercase; letter-spacing: .6px;">Overdue</div>
-        </div>
-    </div>
-</div>
+{{-- Stat Overview: completion ring + legend --}}
+@php
+    $pct    = $total > 0 ? (int) round($done / $total * 100) : 0;
+    $circ   = 314.16;                       // circumference of r=50 ring (2·π·50)
+    $offset = $circ * (1 - $pct / 100);     // how much of the ring stays empty
+    $legend = [
+        ['label' => 'Total',   'value' => $total,   'color' => '#4f8ef7'],
+        ['label' => 'Done',    'value' => $done,    'color' => '#10b981'],
+        ['label' => 'Pending', 'value' => $pending, 'color' => '#f59e0b'],
+        ['label' => 'Overdue', 'value' => $overdue, 'color' => '#ef4444'],
+    ];
+@endphp
+<div class="card mb-4 px-4 py-4" style="border-radius: 16px;">
+    <div class="d-flex flex-column flex-sm-row align-items-center gap-4">
 
-{{-- Progress --}}
-@if($total > 0)
-<div class="mb-5">
-    <div class="d-flex justify-content-between align-items-center mb-2">
-        <span style="font-size: .85rem; font-weight: 600; color: #4a5568;">Completion</span>
-        <span style="font-size: .85rem; color: #8693a4;">{{ $done }}/{{ $total }} tasks</span>
+        {{-- Completion ring --}}
+        <div style="position: relative; width: 120px; height: 120px; flex-shrink: 0;">
+            <svg width="120" height="120" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#eef0f3" stroke-width="12"/>
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#4f8ef7" stroke-width="12" stroke-linecap="round"
+                        stroke-dasharray="{{ $circ }}" stroke-dashoffset="{{ $offset }}"
+                        transform="rotate(-90 60 60)"/>
+            </svg>
+            <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div style="font-size: 1.7rem; font-weight: 800; line-height: 1; color: #1e2a3a;">{{ $pct }}%</div>
+                <div style="font-size: .66rem; color: #8693a4; text-transform: uppercase; letter-spacing: .5px;">complete</div>
+            </div>
+        </div>
+
+        {{-- Legend --}}
+        <div class="flex-grow-1 w-100">
+            <div class="row g-3">
+                @foreach($legend as $item)
+                <div class="col-6">
+                    <div class="d-flex align-items-center gap-2">
+                        <span style="width: 9px; height: 9px; border-radius: 50%; background: {{ $item['color'] }}; flex-shrink: 0;"></span>
+                        <span style="font-size: 1.4rem; font-weight: 800; color: #1e2a3a; line-height: 1;">{{ $item['value'] }}</span>
+                        <span style="font-size: .8rem; color: #8693a4;">{{ $item['label'] }}</span>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+
     </div>
-    <div class="progress" style="height: 8px; border-radius: 99px; background: #e8eaed;">
-        <div class="progress-bar" style="width: {{ round($done / $total * 100) }}%; background: #4f8ef7; border-radius: 99px;"></div>
-    </div>
-    <div class="mt-1 text-end" style="font-size: .78rem; color: #8693a4;">{{ round($done / $total * 100) }}% complete</div>
 </div>
-@endif
 
 {{-- Overdue alert --}}
 @if($overdue > 0)

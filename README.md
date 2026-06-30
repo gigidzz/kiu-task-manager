@@ -79,10 +79,16 @@ Then create the database in MySQL:
 CREATE DATABASE kiu_task_manager CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-**5. Run migrations and seed sample data**
+**4. Run migrations and seed sample data**
 
 ```bash
 php artisan migrate --seed
+```
+
+**5. Link the storage folder** (required for file-upload attachments to display)
+
+```bash
+php artisan storage:link
 ```
 
 **6. Start the development server**
@@ -92,6 +98,18 @@ php artisan serve
 ```
 
 Visit [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+### Demo login
+
+A seeded demo account is available:
+
+| Email              | Password   |
+|--------------------|------------|
+| `demo@kiu.edu.ge`  | `password` |
+
+Or register a new account from the sign-up page.
+
+> **Note:** the compiled front-end assets are included in `public/build`, so you do **not** need Node/npm to run the project. If you change any CSS/JS, rebuild with `npm install && npm run build`.
 
 ---
 

@@ -12,7 +12,7 @@
 
         <div class="card">
             <div class="card-body p-4">
-                <form action="{{ route('tasks.store') }}" method="POST">
+                <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @include('tasks._form')
                     <div class="d-flex gap-2 mt-4">

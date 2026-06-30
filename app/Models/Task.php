@@ -7,13 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 class Task extends Model
 {
     protected $fillable = [
+        'user_id',
         'title',
         'description',
         'subject',
         'status',
         'priority',
         'deadline',
+        'attachment',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
 
     // Status
     const PENDING = 0;

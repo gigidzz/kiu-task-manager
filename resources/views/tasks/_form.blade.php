@@ -66,3 +66,46 @@
         @enderror
     </div>
 </div>
+
+{{-- Tags (Many-to-Many) --}}
+<div class="mb-3">
+    <label class="form-label fw-semibold">Tags</label>
+    <div class="d-flex flex-wrap gap-3">
+        @php $selectedTags = old('tags', isset($task) ? $task->tags->pluck('id')->all() : []); @endphp
+        @forelse($tags as $tag)
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="tags[]"
+                       value="{{ $tag->id }}" id="tag-{{ $tag->id }}"
+                       @checked(in_array($tag->id, $selectedTags))>
+                <label class="form-check-label" for="tag-{{ $tag->id }}">
+                    <span class="badge" style="background: {{ $tag->color }};">{{ $tag->name }}</span>
+                </label>
+            </div>
+        @empty
+            <span class="text-muted small">No tags available yet.</span>
+        @endforelse
+    </div>
+    @error('tags')
+        <div class="text-danger small mt-1">{{ $message }}</div>
+    @enderror
+</div>
+
+{{-- Attachment (File Upload) --}}
+<div class="mb-3">
+    <label for="attachment" class="form-label fw-semibold">Attachment</label>
+    <input type="file" id="attachment" name="attachment"
+           class="form-control @error('attachment') is-invalid @enderror"
+           accept=".jpg,.jpeg,.png,.pdf">
+    <div class="form-text">Optional. JPG, PNG, or PDF — max 2&nbsp;MB.</div>
+    @error('attachment')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+
+    @if(isset($task) && $task->attachment)
+        <div class="mt-2 small">
+            <i class="bi bi-paperclip me-1"></i>
+            <a href="{{ asset('storage/' . $task->attachment) }}" target="_blank">Current attachment</a>
+            <span class="text-muted">— uploading a new file replaces it.</span>
+        </div>
+    @endif
+</div>

@@ -12,7 +12,7 @@
 
         <div class="card">
             <div class="card-body p-4">
-                <form action="{{ route('tasks.update', $task) }}" method="POST">
+                <form action="{{ route('tasks.update', $task) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     @include('tasks._form')

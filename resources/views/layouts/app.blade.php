@@ -80,6 +80,18 @@
                 <a href="{{ route('tasks.create') }}" class="btn-nav-new ms-2">
                     + New Task
                 </a>
+
+                @auth
+                    <span class="nav-link-item ms-2" style="cursor: default;">
+                        <i class="bi bi-person-circle me-1"></i>{{ auth()->user()->name }}
+                    </span>
+                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                        @csrf
+                        <button type="submit" class="nav-link-item border-0 bg-transparent">
+                            <i class="bi bi-box-arrow-right me-1"></i>Logout
+                        </button>
+                    </form>
+                @endauth
             </div>
         </div>
     </nav>
