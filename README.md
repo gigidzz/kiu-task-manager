@@ -111,60 +111,6 @@ Or register a new account from the sign-up page.
 
 > **Note:** the compiled front-end assets are included in `public/build`, so you do **not** need Node/npm to run the project. If you change any CSS/JS, rebuild with `npm install && npm run build`.
 
----
-
-## Database Schema
-
-**Table: `tasks`**
-
-| Column        | Type                          | Notes                    |
-|---------------|-------------------------------|--------------------------|
-| `id`          | bigint (PK, auto-increment)   |                          |
-| `title`       | varchar(255)                  | Required                 |
-| `description` | text                          | Optional                 |
-| `subject`     | varchar(255)                  | e.g. Web Programming     |
-| `status`      | tinyint — `0` pending, `1` done            | Default: `0`  |
-| `priority`    | tinyint — `0` low, `1` medium, `2` high    | Default: `1`  |
-| `deadline`    | date                          | Optional                 |
-| `created_at`  | timestamp                     |                          |
-| `updated_at`  | timestamp                     |                          |
-
----
-
-## Project Structure
-
-```
-app/
-  Http/Controllers/
-    TaskController.php     # All CRUD + dashboard + AJAX toggle
-  Models/
-    Task.php               # Eloquent model
-
-database/
-  migrations/
-    ..._create_tasks_table.php
-  seeders/
-    TaskSeeder.php         # 8 sample academic tasks
-    DatabaseSeeder.php
-
-resources/views/
-  layouts/
-    app.blade.php          # Main layout (navbar, flash messages)
-  dashboard.blade.php      # Stats dashboard
-  tasks/
-    index.blade.php        # Task list with filters & AJAX toggle
-    show.blade.php         # Task detail page
-    create.blade.php       # Create form
-    edit.blade.php         # Edit form
-    _form.blade.php        # Shared form partial
-
-routes/
-  web.php                  
-```
-
----
-
-
 ## Sample Data
 
 The seeder loads 8 pre-built tasks across different subjects (Web Programming, Database Systems, Computer Networks, etc.) with a mix of statuses, priorities, and deadlines — including some overdue tasks for demonstration.
